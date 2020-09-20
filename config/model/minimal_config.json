@@ -1,5 +1,6 @@
 {
     "board_size": 32,
-    "step": 1,
-    "channel_scale": 1
+    "game_step": 1,
+    "channel_scale": 1,
+    "initialization": "ground_truth"
 }
