@@ -1,5 +1,12 @@
 {
-    "batch_size": 512,
-    "density": 0.5,
-    "valid_freq": 1000
+    "data": {
+        "board_size": 32,
+        "batch_size": 512,
+        "density": 0.5
+    },
+    "schedule": {
+        "display_freq": 100,
+        "valid_freq": 1000,
+        "early_stop": 50
+    }
 }
