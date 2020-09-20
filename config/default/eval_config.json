@@ -1,4 +1,6 @@
 {
+    "board_size": 32,
     "batch_size": 512,
+    "batch_count": 20,
     "density": 0.5
 }
