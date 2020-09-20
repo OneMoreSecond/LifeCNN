@@ -3,10 +3,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class MinimalModel(nn.Module):
-    def __init__(self, step=1, channel_scale=1, initialization='random', **kwargs):
+    def __init__(self, game_step=1, channel_scale=1, initialization='random'):
         super().__init__()
 
-        self.step = step
+        self.step = game_step
         self.conv1 = nn.Conv2d(1, 2 * channel_scale, 3, padding=1)
         self.conv2 = nn.Conv2d(2 * channel_scale, 1 * channel_scale, 1)
         self.output_conv = nn.Conv2d(1 * channel_scale, 1, 1)
