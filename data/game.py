@@ -4,13 +4,13 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import Dataset, IterableDataset
 
-def simulate(input, step=1):
+def simulate(input, game_step=1):
     assert input.dtype == torch.bool
     live_neighbors_weights = torch.ones(1, 1, 3, 3, dtype=torch.int8)
     live_neighbors_weights[0, 0, 1, 1] = 0
 
     x = input
-    for i in range(step):
+    for i in range(game_step):
         live_neighbors_count = F.conv2d(x.type(torch.int8), live_neighbors_weights, padding=1)
         assert x.shape == live_neighbors_count.shape
 
@@ -21,10 +21,10 @@ def simulate(input, step=1):
     return x
 
 class RandomDataset(IterableDataset):
-    def __init__(self, step, board_size, density, batch_size, batch_count=None):
+    def __init__(self, game_step, board_size, density, batch_size, batch_count=None):
         super().__init__()
 
-        self.step = step
+        self.game_step = game_step
         self.board_size = board_size
         self.density = density
         self.batch_size = batch_size
@@ -38,7 +38,7 @@ class RandomDataset(IterableDataset):
                 remained_batch_count -= 1
 
             random_inputs = torch.rand(self.batch_size, 1, self.board_size, self.board_size) < self.density
-            simulation_outputs = simulate(random_inputs, step=self.step)
+            simulation_outputs = simulate(random_inputs, game_step=self.game_step)
             yield random_inputs, simulation_outputs
 
 class MinimalDataset(Dataset):
