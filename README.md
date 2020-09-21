@@ -5,7 +5,3 @@ Authors want to train CNN models predicting results after `n` update steps witho
 
 Given that the rule is simple and can be described by a CNN model, this conclusion is somewhat counterintuitive.
 This project is meant to figure out the reason.
-
-## Innovations
-
-- Add residual links
