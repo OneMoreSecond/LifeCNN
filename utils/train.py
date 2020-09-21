@@ -3,25 +3,29 @@ from datetime import datetime
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import torch.cuda as cuda
 
 from .eval import eval
 
 def fit(model, train_data, valid_datasets, early_stop=None, display_freq=100, valid_freq=1000):
+    device = torch.device("cuda:0" if cuda.is_available() else "cpu")
+    model.to(device)
+
     optimizer = optim.Adam(model.parameters())
     loss_func = nn.BCEWithLogitsLoss()
 
-    best_valid_accuracy = 0.0
+    best_valid_accuracy = 0
     stalled_step = 0
 
     for train_step, (train_inputs, train_outputs) in enumerate(train_data):
         assert train_inputs.shape == train_outputs.shape, f'inputs:{train_inputs.shape} outputs:{train_outputs}'
-        model.train()
 
+        model.train()
         optimizer.zero_grad()
-        logits = model(train_inputs.type(torch.get_default_dtype()))
+        logits = model(train_inputs.to(dtype=torch.get_default_dtype(), device=device))
         assert train_outputs.shape == logits.shape, f'expected:{train_outputs.shape} actual:{logits.shape}'
 
-        loss = loss_func(logits, train_outputs.type_as(logits))
+        loss = loss_func(logits, train_outputs.to(logits))
         loss.backward()
         optimizer.step()
 
@@ -43,5 +47,5 @@ def fit(model, train_data, valid_datasets, early_stop=None, display_freq=100, va
                     else:
                         stalled_step += 1
                         print(f'Stalled for {stalled_step} steps')
-            if stalled_step == early_stop:
+            if stalled_step == early_stop or best_valid_accuracy == 1:
                 break
