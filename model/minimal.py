@@ -8,8 +8,8 @@ class MinimalModel(nn.Module):
 
         self.step = game_step
         self.conv1 = nn.Conv2d(1, 2 * channel_scale, 3, padding=1)
-        self.conv2 = nn.Conv2d(2 * channel_scale, 1 * channel_scale, 1)
-        self.output_conv = nn.Conv2d(1 * channel_scale, 1, 1)
+        self.conv2 = nn.Conv2d(2 * channel_scale, 1, 1)
+        self.output_conv = nn.Conv2d(1, 1, 1)
 
         if initialization == 'ground_truth':
             assert channel_scale == 1, 'ground truth weight initialization does not support channel scale'
