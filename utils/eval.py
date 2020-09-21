@@ -21,4 +21,4 @@ def eval(model, test_data):
             is_same = (expected_outputs == actual_outputs).view(batch_size, -1).all(1)
             correct_count += is_same.sum(dtype=torch.int).item()
 
-    return Fraction(correct_count, total_count)
+    return Fraction(correct_count, total_count, _normalize=False)
