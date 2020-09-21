@@ -25,6 +25,7 @@ def fit(model, train_data, valid_datasets, early_stop=None, display_freq=100, va
         logits = model(train_inputs.to(dtype=torch.get_default_dtype(), device=device))
         assert train_outputs.shape == logits.shape, f'expected:{train_outputs.shape} actual:{logits.shape}'
 
+        logits = torch.clamp(logits, min=-5.0, max=5.0)
         loss = loss_func(logits, train_outputs.to(logits))
         loss.backward()
         optimizer.step()
@@ -47,5 +48,5 @@ def fit(model, train_data, valid_datasets, early_stop=None, display_freq=100, va
                     else:
                         stalled_step += 1
                         print(f'Stalled for {stalled_step} steps')
-            if stalled_step == early_stop or best_valid_accuracy == 1:
+            if stalled_step == early_stop or best_valid_accuracy.denominator == best_valid_accuracy.numerator:
                 break
